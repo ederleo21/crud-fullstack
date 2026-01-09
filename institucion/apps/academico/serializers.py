@@ -25,7 +25,8 @@ class ModalidadSerializer(BaseNombreSerializer):
         model = Modalidad
         fields = '__all__'
 
-class CarreraSerializer(serializers.ModelSerializer):
+
+class CarreraSerializer(BaseNombreSerializer):
     modalidad_id = serializers.PrimaryKeyRelatedField(queryset=Modalidad.objects.all(), source='modalidad', write_only=True)
     modalidad = ModalidadSerializer(read_only=True)
 

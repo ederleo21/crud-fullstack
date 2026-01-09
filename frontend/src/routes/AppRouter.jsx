@@ -4,6 +4,7 @@ import { ModalidadesPage } from "../modules/modalidades/pages/ModalidadesPage";
 import { CarrerasPage } from "../modules/carreras/pages/CarrerasPage";
 
 export default function AppRouter() {
+  
   return (
     <Routes>
       <Route path="/" element={<Home />} />

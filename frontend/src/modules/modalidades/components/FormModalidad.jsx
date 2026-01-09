@@ -1,13 +1,14 @@
-import React from 'react';
 import * as Yup from 'yup';
 import { Formik, Form } from 'formik';
-import { ModalForm } from '../../../global/components/atoms/ModalForm';
+import { ModalForm } from '../../../global/components/layout/ModalForm';
 import { InputField } from '../../../global/components/atoms/InputField';
 import { handleFormSubmit } from '../../../global/utils/handleFormSubmit';
 import { createModalidad, updateModalidad } from '../services/modalidadServices';
+import { useDispatch } from 'react-redux';
+import { addModalidad, editModalidad } from '../slices/modalidadSlice';
 
-export const FormModalidad = ({ isOpen, onClose, modalidad=null, setModalidades }) => {
-
+export const FormModalidad = ({ isOpen, onClose, modalidad=null }) => {
+  const dispatch = useDispatch()
   const isEdit = Boolean(modalidad);
 
   const initialValues = {
@@ -35,11 +36,9 @@ export const FormModalidad = ({ isOpen, onClose, modalidad=null, setModalidades 
 
     if (success) {
          if (isEdit) {
-           setModalidades(prev =>
-             prev.map(m => m.id === data.id ? data : m)
-           );
+            dispatch(editModalidad(data));
          } else {
-           setModalidades(prev => [...prev, data]);
+           dispatch(addModalidad(data));
          }
          onClose();
        }

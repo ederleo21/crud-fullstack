@@ -1,13 +1,14 @@
-import React from 'react';
 import { Formik, Form, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
-import { ModalForm } from '../../../global/components/atoms/ModalForm';
+import { ModalForm } from '../../../global/components/layout/ModalForm';
 import { InputField } from '../../../global/components/atoms/InputField';
 import { createCarrera, updateCarrera } from '../services/carreraServices';
 import { handleFormSubmit } from '../../../global/utils/handleFormSubmit';
+import { useDispatch } from 'react-redux';
+import { addCarrera, editCarrera } from '../slices/carreraSlice';
 
-export const FormCarrera = ({ isOpen, onClose, modalidades = [], carrera = null, setCarreras }) => {
-  
+export const FormCarrera = ({ isOpen, onClose, modalidades = [], carrera = null }) => {
+  const dispatch = useDispatch();
   const isEdit = Boolean(carrera);
 
   const initialValues = {
@@ -37,11 +38,9 @@ export const FormCarrera = ({ isOpen, onClose, modalidades = [], carrera = null,
       }, actions)
       if (success) {
         if (isEdit) {
-          setCarreras(prev =>
-            prev.map(c => c.id === data.id ? data : c)
-          );
+          dispatch(editCarrera(data))
         } else {
-          setCarreras(prev => [...prev, data]);
+          dispatch(addCarrera(data))
         }
         onClose();
       }
@@ -97,7 +96,6 @@ export const FormCarrera = ({ isOpen, onClose, modalidades = [], carrera = null,
                   </option>
                 ))}
               </select>
-              {/* Aquí mostramos el error */}
               <ErrorMessage
                 name="modalidad_id"
                 component="div"

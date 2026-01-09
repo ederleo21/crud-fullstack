@@ -50,12 +50,12 @@ export const ModalDelete = ({ onClose, onConfirm, title, children }) => {
               </svg>
             </div>
 
-            <h3 className="text-2xl font-semibold text-gray-800 font-[Poppins]">
+            <h3 className="text-2xl font-semibold text-gray-800 font-poppins">
               {title}
             </h3>
 
             {children && (
-              <p className="text-gray-600 text-base leading-relaxed font-[Poppins]">
+              <p className="text-gray-600 text-base leading-relaxed font-poppins">
                 {children}
               </p>
             )}
@@ -63,14 +63,14 @@ export const ModalDelete = ({ onClose, onConfirm, title, children }) => {
             <div className="flex gap-4 mt-4 w-full justify-center">
               <button
                 onClick={onConfirm}
-                className="flex-1 py-3 px-5 bg-red-600 text-white font-[Poppins] rounded-xl hover:bg-red-700 transition"
+                className="flex-1 py-3 px-5 bg-red-600 text-white font-poppins rounded-xl hover:bg-red-700 transition"
               >
                 Sí, eliminar
               </button>
 
               <button
                 onClick={onClose}
-                className="flex-1 py-3 px-5 border border-gray-300 bg-white text-gray-800 rounded-xl font-[Poppins] hover:bg-gray-100 transition"
+                className="flex-1 py-3 px-5 border border-gray-300 bg-white text-gray-800 rounded-xl font-poppins hover:bg-gray-100 transition"
               >
                 Cancelar
               </button>

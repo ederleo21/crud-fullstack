@@ -1,20 +1,19 @@
 import { useState } from 'react';
 import { FormModalidad } from './FormModalidad';
-import { ModalDelete } from '../../../global/components/atoms/ModalDelete';
+import { ModalDelete } from '../../../global/components/layout/ModalDelete';
 import { deleteModalidad } from '../services/modalidadServices';
 import { toast } from 'react-toastify';
 import { FilterModalidad } from './FilterModalidad';
+import { useDispatch } from 'react-redux';
+import { removeModalidad } from '../slices/modalidadSlice';
+import { RowTableModalidad } from './RowTableModalidad';
 
-export const TableModalidad = ({ modalidades, setModalidades }) => {
+export const TableModalidad = ({ modalidades }) => {
   const [openModalForm, setModalForm] = useState(false); 
   const [openModalDelete, setModalDelete] = useState(false);
   const [selectedModalidad, setSelectedModalidad] = useState(null);
   const [filters, setFilters] = useState({ search: "", estado: "todos" });
-
-  const handleCreate = () => {
-    setSelectedModalidad(null); 
-    setModalForm(true);
-  };
+  const dispatch = useDispatch();
 
   const handleEdit = (modalidad) => {
     setSelectedModalidad(modalidad);
@@ -30,7 +29,7 @@ export const TableModalidad = ({ modalidades, setModalidades }) => {
     try {
       await deleteModalidad(modalidad.id);
       toast.success("Modalidad eliminada!")
-      setModalidades(prev => prev.filter(c => c.id !== modalidad.id));
+      dispatch(removeModalidad(modalidad.id))
       setModalDelete(false);
     } catch (error) {
       toast.error("Error al eliminar la modalidad")
@@ -58,10 +57,10 @@ export const TableModalidad = ({ modalidades, setModalidades }) => {
               Modalidades
             </h3>
             <button
-              onClick={handleCreate}
+              onClick={() => { setModalForm(true), setSelectedModalidad(null) }}
               className="px-6 py-3 bg-green-500 text-white rounded-lg shadow hover:bg-green-600 transition transform hover:scale-105 font-semibold"
             >
-              + Crear
+              + Añadir modalidad
             </button>
           </div>
 
@@ -69,51 +68,25 @@ export const TableModalidad = ({ modalidades, setModalidades }) => {
 
           {/* Tabla */}
           {filteredModalidades && filteredModalidades.length > 0 ? (
-            <div className="overflow-x-auto rounded-lg border border-gray-200 shadow">
+            <div className="overflow-x-auto rounded-lg border border-gray-200 shadow max-h-96 overflow-y-auto">
               <table className="min-w-full divide-y divide-gray-200">
                 <thead className="bg-gray-900 text-white">
                   <tr>
-                    <th className="px-6 py-4 text-left text-sm font-semibold uppercase tracking-wider">
-                      ID
-                    </th>
-                    <th className="px-6 py-4 text-left text-sm font-semibold uppercase tracking-wider">
-                      Nombre
-                    </th>
-                    <th className="px-6 py-4 text-left text-sm font-semibold uppercase tracking-wider">
-                      Estado
-                    </th>
-                    <th className="px-6 py-4 text-left text-sm font-semibold uppercase tracking-wider">
-                      Acciones
-                    </th>
+                    <th className="px-6 py-4 text-left text-sm font-semibold uppercase tracking-wider">ID</th>
+                    <th className="px-6 py-4 text-left text-sm font-semibold uppercase tracking-wider">Nombre</th>
+                    <th className="px-6 py-4 text-left text-sm font-semibold uppercase tracking-wider">Estado</th>
+                    <th className="px-6 py-4 text-left text-sm font-semibold uppercase tracking-wider">Acciones</th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-gray-200">
                   {filteredModalidades.map((modalidad, index) => (
-                    <tr key={modalidad.id} className={`${index % 2 === 0 ? "bg-gray-50" : "bg-white"} hover:bg-gray-100 transition`}>
-                      <td className="px-6 py-4 text-gray-700 font-medium">{modalidad.id}</td>
-                      <td className="px-6 py-4 text-gray-800 font-semibold">{modalidad.nombre}</td>
-                      <td className="px-6 py-4">
-                        {modalidad.estado ? (
-                          <span className="px-3 py-1 text-sm font-semibold text-green-800 bg-green-200 rounded-full">Activo</span>
-                        ) : (
-                          <span className="px-3 py-1 text-sm font-semibold text-red-800 bg-red-200 rounded-full">Inactivo</span>
-                        )}
-                      </td>
-                      <td className="px-6 py-4 flex space-x-3">
-                        <button
-                          onClick={() => handleEdit(modalidad)}
-                          className="px-4 py-2 bg-blue-500 text-white text-sm rounded-lg shadow hover:bg-blue-600 transition transform hover:scale-105"
-                        >
-                          Editar
-                        </button>
-                        <button
-                          onClick={() => handleDelete(modalidad)}
-                          className="px-4 py-2 bg-red-500 text-white text-sm rounded-lg shadow hover:bg-red-600 transition transform hover:scale-105"
-                        >
-                          Eliminar
-                        </button>
-                      </td>
-                    </tr>
+                    <RowTableModalidad
+                      key={modalidad.id}
+                      modalidad={modalidad}
+                      index={index}
+                      onEdit={handleEdit}
+                      onDelete={handleDelete}
+                    />
                   ))}
                 </tbody>
               </table>
@@ -131,7 +104,6 @@ export const TableModalidad = ({ modalidades, setModalidades }) => {
         isOpen={openModalForm}
         onClose={() => setModalForm(false)}
         modalidad={selectedModalidad}
-        setModalidades={setModalidades}
       />
 
       {/* Modal de confirmación */}
@@ -141,9 +113,7 @@ export const TableModalidad = ({ modalidades, setModalidades }) => {
           onConfirm={() => confirmModal(selectedModalidad)}
           title={"Eliminar Modalidad"}
         >
-          <p className="text-gray-700 font-medium">
-            Se eliminará esta modalidad de forma permanente.
-          </p>
+          Se eliminará esta modalidad de forma permanente.
         </ModalDelete>
       )}
     </>

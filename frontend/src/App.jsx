@@ -1,23 +1,26 @@
-import React from 'react'
 import AppRouter from './routes/AppRouter'
 import { BrowserRouter as Router } from "react-router-dom";
 import { ToastContainer } from 'react-toastify';
 import { FloatingNav } from './global/components/layout/FloatingNav';
+import { store } from './store/store';
+import { Provider } from 'react-redux'
 
 export const App = () => {
 
   return (
     <>
     <Router>
-      <div className="p-4">
-        <AppRouter />
-      </div>
+      <Provider store={store} >
+        <div>
+          <AppRouter />
+        </div>
+      </Provider>
       <FloatingNav/>
     </Router>
     
       <ToastContainer
         position="top-right"
-        autoClose={3000}
+        autoClose={2000}
         hideProgressBar={false}
         newestOnTop={true}
         closeOnClick

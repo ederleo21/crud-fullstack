@@ -7,14 +7,11 @@ export const FloatingNav = () => {
   return (
     <div className="fixed top-0 left-0 w-full bg-white shadow-lg border-b border-gray-200 font-poppins z-50">
       <div className="flex justify-between items-center px-8 py-4">
-        {/* Texto de ruta actual */}
         <span className="text-lg text-gray-700 font-medium">
           Estás en: <strong className="text-blue-600">{currentPath}</strong>
         </span>
 
-        {/* Links */}
         <div className="flex gap-6">
-          {/* Mostrar Home solo si NO estoy en "/" */}
           {currentPath !== "/" && (
             <NavLink
               to="/"
@@ -24,7 +21,6 @@ export const FloatingNav = () => {
             </NavLink>
           )}
 
-          {/* Si estoy en Home, mostrar ambos botones */}
           {currentPath === "/" && (
             <>
               <NavLink
@@ -42,7 +38,6 @@ export const FloatingNav = () => {
             </>
           )}
 
-          {/* Si estoy en Carreras, mostrar Modalidades */}
           {currentPath === "/carreras" && (
             <NavLink
               to="/modalidades"
@@ -52,7 +47,6 @@ export const FloatingNav = () => {
             </NavLink>
           )}
 
-          {/* Si estoy en Modalidades, mostrar Carreras */}
           {currentPath === "/modalidades" && (
             <NavLink
               to="/carreras"

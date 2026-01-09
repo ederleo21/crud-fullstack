@@ -23,7 +23,7 @@ class BaseNombreSerializer(serializers.ModelSerializer):
 class ModalidadSerializer(BaseNombreSerializer):
     class Meta:
         model = Modalidad
-        fields = '__all__'
+        fields = ['id', 'nombre', 'estado']
 
 
 class CarreraSerializer(BaseNombreSerializer):

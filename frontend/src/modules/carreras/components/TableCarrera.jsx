@@ -1,21 +1,20 @@
 import { FormCarrera } from './FormCarrera';
 import { useState } from 'react';
-import { ModalDelete } from '../../../global/components/atoms/ModalDelete';
+import { ModalDelete } from '../../../global/components/layout/ModalDelete';
 import { deleteCarrera } from '../services/carreraServices';
 import { toast } from 'react-toastify';
 import { FilterCarrera } from './FilterCarrera';
+import { useDispatch } from 'react-redux';
+import { removeCarrera } from '../slices/carreraSlice';
+import { RowTableCarrera } from './RowTableCarrera';
 
-export const TableCarrera = ({ carreras, setCarreras, modalidades }) => {
+export const TableCarrera = ({ carreras, modalidades }) => {
   const [openModalForm, setModalForm] = useState(false); 
   const [openModalDelete, setModalDelete] = useState(false);
   const [selectedCarrera, setSelectedCarrera] = useState(null);
   const [filters, setFilters] = useState({ search: "", estado: "todos", modalidad: "todas" });
-
-  const handleCreate = () => {
-    setSelectedCarrera(null);
-    setModalForm(true);
-  }
-
+  const dispatch = useDispatch();
+  
   const handleEdit = (carrera) => {
     setSelectedCarrera(carrera)
     setModalForm(true);
@@ -30,7 +29,7 @@ export const TableCarrera = ({ carreras, setCarreras, modalidades }) => {
     try{  
       await deleteCarrera(carrera.id)
       toast.success("Carrera eliminada!")
-      setCarreras(prev => prev.filter(c => c.id !== carrera.id));
+      dispatch(removeCarrera(carrera.id))
       setModalDelete(false);
     }catch(error){
       toast.error("Error al eliminar la carrera!")
@@ -62,10 +61,10 @@ export const TableCarrera = ({ carreras, setCarreras, modalidades }) => {
               Carreras
             </h3>
             <button
-              onClick={handleCreate}
+              onClick={() => { setModalForm(true), setSelectedCarrera(null) }}
               className="px-6 py-3 bg-green-500 text-white rounded-lg shadow hover:bg-green-600 transition transform hover:scale-105 font-semibold"
             >
-              + Crear
+              + Añadir carrera
             </button>
           </div>
 
@@ -74,9 +73,9 @@ export const TableCarrera = ({ carreras, setCarreras, modalidades }) => {
 
           {/* Tabla */}
           {filteredCarreras && filteredCarreras.length > 0 ? (
-            <div className="overflow-x-auto rounded-lg border border-gray-200 shadow">
+            <div className="overflow-x-auto rounded-lg border border-gray-200 shadow max-h-96 overflow-y-auto">
               <table className="min-w-full divide-y divide-gray-200">
-                <thead className="bg-gray-900 text-white">
+                <thead className="bg-gray-900 text-white sticky top-0 z-10">
                   <tr>
                     <th className="px-6 py-4 text-left text-sm font-semibold uppercase tracking-wider">ID</th>
                     <th className="px-6 py-4 text-left text-sm font-semibold uppercase tracking-wider">Nombre</th>
@@ -87,32 +86,13 @@ export const TableCarrera = ({ carreras, setCarreras, modalidades }) => {
                 </thead>
                 <tbody className="divide-y divide-gray-200">
                   {filteredCarreras.map((carrera, index) => (
-                    <tr key={carrera.id} className={`${index % 2 === 0 ? "bg-gray-50" : "bg-white"} hover:bg-gray-100 transition`}>
-                      <td className="px-6 py-4 text-gray-700 font-medium">{carrera.id}</td>
-                      <td className="px-6 py-4 text-gray-800 font-semibold">{carrera.nombre}</td>
-                      <td className="px-6 py-4 text-gray-700">{carrera.modalidad.nombre}</td>
-                      <td className="px-6 py-4">
-                        {carrera.estado ? (
-                          <span className="px-3 py-1 text-sm font-semibold text-green-800 bg-green-200 rounded-full">Activo</span>
-                        ) : (
-                          <span className="px-3 py-1 text-sm font-semibold text-red-800 bg-red-200 rounded-full">Inactivo</span>
-                        )}
-                      </td>
-                      <td className="px-6 py-4 flex space-x-3">
-                        <button
-                          className="px-4 py-2 bg-blue-500 text-white text-sm rounded-lg shadow hover:bg-blue-600 transition transform hover:scale-105"
-                          onClick={() => handleEdit(carrera)}
-                        >
-                          Editar
-                        </button>
-                        <button
-                          className="px-4 py-2 bg-red-500 text-white text-sm rounded-lg shadow hover:bg-red-600 transition transform hover:scale-105"
-                          onClick={() => handleDelete(carrera)}
-                        >
-                          Eliminar
-                        </button>
-                      </td>
-                    </tr>
+                    <RowTableCarrera
+                      key={carrera.id}
+                      carrera={carrera}
+                      index={index}
+                      onEdit={handleEdit}
+                      onDelete={handleDelete}
+                    />
                   ))}
                 </tbody>
               </table>
@@ -130,7 +110,6 @@ export const TableCarrera = ({ carreras, setCarreras, modalidades }) => {
         isOpen={openModalForm}
         onClose={() => setModalForm(false)}
         carrera={selectedCarrera}
-        setCarreras={setCarreras}
         modalidades={modalidades}
       />
 
@@ -141,9 +120,7 @@ export const TableCarrera = ({ carreras, setCarreras, modalidades }) => {
           onConfirm={() => confirmModal(selectedCarrera)}
           title={"Eliminar Carrera"}
         >
-          <p className="text-gray-700 font-medium">
-            Se eliminará esta carrera de forma permanente.
-          </p>
+          Se eliminará esta carrera de forma permanente.
         </ModalDelete>
       )}
     </>

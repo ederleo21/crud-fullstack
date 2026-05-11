@@ -37,7 +37,7 @@ export const CarrerasPage = () => {
   if(error) return <ErrorState error={error} />
 
   return (
-    <div>
+    <div className="bg-blue-50 p-6 rounded-lg shadow-md min-h-screen">
       <TableCarrera carreras={carreras} modalidades={modalidades} />
     </div>
   )

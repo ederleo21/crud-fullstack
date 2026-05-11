@@ -31,7 +31,7 @@ export const ModalidadesPage = () => {
     if(error) return <ErrorState error={error} />
 
   return (
-    <div>
+    <div className="bg-green-50 p-6 rounded-lg shadow-md min-h-screen">
         <TableModalidad modalidades={modalidades} />
     </div>
   )

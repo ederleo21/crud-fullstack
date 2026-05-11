@@ -49,8 +49,8 @@ export const TableModalidad = ({ modalidades }) => {
 
   return (
     <>
-      <div className="flex justify-center items-center min-h-screen bg-gradient-to-br from-gray-100 via-gray-200 to-gray-300 p-6 font-poppins">
-        <div className="bg-white shadow-2xl rounded-2xl p-8 w-full max-w-5xl">
+      <div className="flex justify-center items-center min-h-screen bg-gradient-to-br from-green-100 via-green-200 to-green-300 p-6 font-poppins">
+        <div className="bg-green-50 shadow-2xl rounded-2xl p-8 w-full max-w-5xl">
           {/* Header */}
           <div className="flex justify-between items-center mb-8">
             <h3 className="text-3xl font-bold text-center text-gray-800 font-lora tracking-wide">
